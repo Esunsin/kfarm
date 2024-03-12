@@ -4,11 +4,11 @@ import lombok.Getter;
 import study.kfarm.user.User;
 
 @Getter
-public class ResponseUser {
+public class UserResponse {
 
     private String username;
 
-    public ResponseUser(User user) {
+    public UserResponse(User user) {
         this.username = user.getUsername();
     }
 }

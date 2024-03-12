@@ -1,10 +1,9 @@
 package study.kfarm.user.dto;
 
 import lombok.Getter;
-import org.springframework.core.SpringVersion;
 
 @Getter
-public class RequestUser {
+public class UserRequest {
     private String username;
     private String password;
 }
