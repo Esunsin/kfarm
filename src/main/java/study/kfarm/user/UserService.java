@@ -7,15 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import study.kfarm.global.exception.PasswordNotMatchedException;
-import study.kfarm.user.dto.RequestUser;
-import study.kfarm.user.dto.ResponseUser;
-
-import java.beans.Encoder;
+import study.kfarm.user.dto.UserRequest;
+import study.kfarm.user.dto.UserResponse;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -23,15 +23,19 @@ public class UserService {
 
 
     //회원가입
-    public ResponseUser signup(RequestUser requestUser) {
+    public UserResponse signup(UserRequest requestUser) {
+        if(userRepository.findByUsername(requestUser.getUsername()).isPresent()){
+            throw new IllegalArgumentException("중복된 아이디 입니다.");
+        }
         String encodedPassword = passwordEncoder.encode(requestUser.getPassword());
         User user = new User(requestUser.getUsername(), encodedPassword);
         User savedUser = userRepository.save(user);
-        return new ResponseUser(savedUser);
+        return new UserResponse(savedUser);
     }
 
     //로그인
-    public ResponseUser login(RequestUser requestUser) {
+    @Transactional(readOnly = true)
+    public UserResponse login(UserRequest requestUser) {
 
         // 현재 세션에서 이미 로그인된 사용자 확인
         HttpSession session = request.getSession(false);
@@ -47,6 +51,6 @@ public class UserService {
             throw new PasswordNotMatchedException();
         }
 
-        return new ResponseUser(findUser);
+        return new UserResponse(findUser);
     }
 }

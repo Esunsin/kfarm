@@ -2,8 +2,8 @@ package study.kfarm.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import study.kfarm.user.dto.RequestUser;
-import study.kfarm.user.dto.ResponseUser;
+import study.kfarm.user.dto.UserRequest;
+import study.kfarm.user.dto.UserResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,12 +13,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users/signup")
-    public ResponseUser signup(@RequestBody RequestUser requestUser){
+    public UserResponse signup(@RequestBody UserRequest requestUser){
         return userService.signup(requestUser);
     }
 
     @PostMapping("/users/login")
-    public ResponseUser login(@RequestBody RequestUser requestUser) {
+    public UserResponse login(@RequestBody UserRequest requestUser) {
         return userService.login(requestUser);
     }
 }
